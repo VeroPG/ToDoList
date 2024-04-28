@@ -12,6 +12,8 @@ const ToDoList = () => {
     task: "",
     desc: "",
   });
+  const [showMessage, setMessage] = useState(false);
+  const [editTask, setEditTask] = useState(null);
 
   // FUNCION FLECHA PARA PINTAR ELEMENTOS
   const paintCards = () =>
@@ -20,6 +22,7 @@ const ToDoList = () => {
         key={uuidv4()} //index o identificador unico
         task={item.task}
         desc={item.desc}
+        edit={() => setEditTask(index)}
         delete={() => deleteItem(index)}
       />
     ));
@@ -55,6 +58,10 @@ const ToDoList = () => {
       taskRef.current.value = "";
       descRef.current.value = "";
       setList([item, ...list]); // Añade el nuevo destino a la lista
+      setMessage(true);
+      setTimeout(() => {
+        setMessage(false);
+      }, 5000);
     }
   };
 
@@ -67,6 +74,13 @@ const ToDoList = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createItem();
+  };
+
+  const handleEdit = (index, edTask) => {
+    const newList = [...list];
+    newList[index].task = edTask;
+    setList(newList);
+    setEditTask(null);
   };
 
   // FUNCION FLECHA-->   HOOKS ON CHANGE STATE
@@ -109,10 +123,21 @@ const ToDoList = () => {
         <br />
         {values.task && values.desc ? (
           <button type="submit">Crear Tarea</button>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </form>
+      {showMessage && <div className="show">Nueva tarea añadida</div>}
+
+      {editTask !== null && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleEdit(editTask, e.target.task.value);
+          }}
+        >
+          <input type="text" defaultValue={list[editTask].task} name="task" />
+          <button type="submit">Guardar</button>
+        </form>
+      )}
       {paintCards()}
     </section>
   );

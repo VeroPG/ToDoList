@@ -8,7 +8,10 @@ const ToDoCard = (props) => {
     <article>
       <h3>{props.task}</h3>
       <p>{props.desc}</p>
+      <button onClick={()=>props.edit()}>Edit</button>
       <button onClick={() => props.delete()}>Borrar Tarea</button>
+      <input type="checkbox" id="done" value="done" />
+      <label htmlFor="done">Marcar tarea como teminada</label>
     </article>
   );
 };
